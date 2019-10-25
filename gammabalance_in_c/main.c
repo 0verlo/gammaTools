@@ -77,8 +77,8 @@ int main (int argc, char** argv)
 			printf("file2:%d",numbGot2);
 			
 			//**balancing date
-			//numbOut = (numbGot1 + numbGot2) / 2	;
-			numbOut = numbGot1 + 63;	
+			numbOut = (numbGot1 + numbGot2) / 2	;
+			//numbOut = numbGot1 + 63;	
 			snprintf(charOut, 20, "%d\n", numbOut);			
 			printf("file3:%s",charOut);
 			
