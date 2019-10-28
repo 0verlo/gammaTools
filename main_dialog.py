@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
 from Ui_main_window import Ui_MainWindow
 from func.GammaReader import gammaReader
-from func.gammaextend import extend
+import func.GammaFuncs as gammaFunc
 
 class Dialog(QMainWindow, Ui_MainWindow):
     """
@@ -24,6 +24,9 @@ class Dialog(QMainWindow, Ui_MainWindow):
         """
         super(Dialog, self).__init__(parent)
         self.setupUi(self)
+        self.mainGammaInput = None
+        self.subGammaInput = None
+        self.resultList = []
 
     @pyqtSlot()
     def on_pushButton_FileOpenMain_clicked(self):
@@ -90,78 +93,109 @@ class Dialog(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        pass
-    
+        if(None == self.mainGammaInput):
+            pass
+        elif((0 != self.mainGammaInput.gammaDone)&
+            ([] != self.resultList)):
+            self.statusBar().showMessage("Draw.")
+            gammaFunc.draw(self.resultList, self.mainGammaInput.gammaList)
+            return
+
+        if(None == self.subGammaInput):
+            pass
+        elif((0 != self.subGammaInput.gammaDone)&
+            ([] != self.resultList)):
+            self.statusBar().showMessage("Draw.")
+            gammaFunc.draw(self.resultList, self.subGammaInput.gammaList)
+            return
+            
+        self.statusBar().showMessage("No gamma is ready.")
+        
     @pyqtSlot()
     def on_pushButton_extend_clicked(self):
         """
         Slot documentation goes here.
-        """
-        # TODO: not implemented yet
-        try:
-            self.mainGammaInput
-        except AttributeError:
+        """           
+        if(None == self.mainGammaInput):
             pass
-        else:            
-            if(0 != self.mainGammaInput.gammaDone):
-                resultList = extend(self.mainGammaInput.gammaList, 1025)
-                self.statusBar().showMessage("GammaMain have been extended.")
-                self.textEdit_result.setPlainText(gammaReader.refrom(resultList))
-                return
+        elif(0 != self.mainGammaInput.gammaDone):
+            self.resultList = gammaFunc.extend(self.mainGammaInput.gammaList, 1025)
+            self.statusBar().showMessage("GammaMain have been extended.")
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
 
-        try:
-            self.mainGammaInput
-        except AttributeError:
+        if(None == self.subGammaInput):
             pass
-        else:
-            if(0 != self.subGammaInput.gammaDone):
-                resultList = extend(self.subGammaInput.gammaList, 1025)
-                self.statusBar().showMessage("GammaSub have been extended.")
-                self.textEdit_result.setPlainText(gammaReader.refrom(resultList))
-                return
-        self.statusBar().showMessage("!No gamma is ready.")
+        elif(0 != self.subGammaInput.gammaDone):
+            self.resultList = gammaFunc.extend(self.subGammaInput.gammaList, 1025)
+            self.statusBar().showMessage("GammaSub have been extended.")
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
+        self.statusBar().showMessage("No gamma is ready.")
     
     @pyqtSlot()
     def on_pushButton_balance_clicked(self):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        pass
+        if((None == self.mainGammaInput)|
+            (None == self.subGammaInput)):
+                pass
+        elif((0 != self.mainGammaInput.gammaDone)&
+            (0 != self.subGammaInput.gammaDone)):
+            self.statusBar().showMessage("Balance done.")
+            self.resultList = gammaFunc.balance(self.mainGammaInput.gammaList, self.subGammaInput.gammaList)
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
+                
+        self.statusBar().showMessage("No gamma is ready.")
+
     
     @pyqtSlot()
     def on_pushButton_smooth_clicked(self):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        pass
+         
+        if(None == self.mainGammaInput):
+            pass
+        elif(0 != self.mainGammaInput.gammaDone):
+            self.statusBar().showMessage("Smooth GammaMain.")
+            self.resultList = gammaFunc.smooth(self.mainGammaInput.gammaList)
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
+
+        if(None == self.subGammaInput):
+            pass
+        elif(0 != self.subGammaInput.gammaDone):
+            self.statusBar().showMessage("Smooth GammaSub.")
+            self.resultList = gammaFunc.smooth(self.subGammaInput.gammaList)
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
+            
+        self.statusBar().showMessage("No gamma is ready.")
         
     @pyqtSlot()
     def on_pushButton_reform_clicked(self):
         """
         Slot documentation goes here.
         """
-        try:
-            self.mainGammaInput
-        except AttributeError:
-            pass
-        else:            
-            if(0 != self.mainGammaInput.gammaDone):
-                self.statusBar().showMessage("GammaMain.")
-                self.textEdit_result.setPlainText(gammaReader.refrom(self.mainGammaInput.gammaList))
-                return
+        if(None == self.mainGammaInput):
+            pass        
+        elif(0 != self.mainGammaInput.gammaDone):
+            self.statusBar().showMessage("Reform GammaMain.")
+            self.resultList = self.mainGammaInput.gammaList
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
 
-        try:
-            self.mainGammaInput
-        except AttributeError:
+        if(None == self.subGammaInput):
             pass
-        else:
-            if(0 != self.subGammaInput.gammaDone):
-                self.statusBar().showMessage("GammaSub.")
-                self.textEdit_result.setPlainText(gammaReader.refrom(self.subGammaInput.gammaList))
-                return
+        elif(0 != self.subGammaInput.gammaDone):
+            self.statusBar().showMessage("Reform GammaSub.")
+            self.resultList = gammaFunc.reform(self.subGammaInput.gammaList)
+            self.textEdit_result.setPlainText(gammaFunc.reform(self.resultList))
+            return
+                
         self.statusBar().showMessage("No gamma is ready.")
         
     @pyqtSlot()

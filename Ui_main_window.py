@@ -9,7 +9,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -93,7 +92,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setStretch(0, 2)
         self.verticalLayout_4.setStretch(1, 1)
         MainWindow.setCentralWidget(self.centralWidget)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -110,6 +108,7 @@ class Ui_MainWindow(object):
         self.pushButton_smooth.setText(_translate("MainWindow", "gammaSmooth"))
         self.toolButton_copy.setText(_translate("MainWindow", "copy"))
         self.toolButton_drawResult.setText(_translate("MainWindow", "draw"))
+        self.statusBar().showMessage("")
 
 
 if __name__ == "__main__":
